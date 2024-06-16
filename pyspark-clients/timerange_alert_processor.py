@@ -26,7 +26,9 @@ kafka_params = {
     "kafka.bootstrap.servers": "kafka:9092",
     "subscribe": "logs",
     "startingOffsets": "earliest",
+    # "group.id": "Last-10-minutes-alert-processor"
 }
+
 
 # Read from Kafka topic as a DataFrame
 df = spark.readStream.format("kafka").options(**kafka_params).load()

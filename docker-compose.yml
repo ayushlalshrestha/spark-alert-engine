@@ -38,8 +38,6 @@ services:
       - "7077:7077"
     networks:
       - spark-kafka-network
-    volumes:
-      - ./spark/processors:/opt/local/bin/processors
 
   spark-worker-1:
     container_name: spark-worker-1
@@ -69,6 +67,18 @@ services:
     networks:
       - spark-kafka-network
 
+  pyspark-client:
+    container_name: pyspark-client
+    image: bitnami/spark:latest
+    command: /usr/local/bin/pyspark-clients/run.sh timerange_alert_processor.py
+    depends_on:
+      - spark-master
+    environment:
+      SPARK_MASTER_URL: spark://spark-master:7077
+    volumes:
+      - ./pyspark-clients:/usr/local/bin/pyspark-clients
+    networks:
+      - spark-kafka-network
 networks:
   spark-kafka-network:
     driver: bridge
