@@ -24,4 +24,5 @@ The alert-engine (pyspark-client processor) watches if there are more than 2 log
 If the alert engine (pyspark processor) is failing, make sure the kafka topic is initialized and then restart the pyspark program.
 
     > docker exec -it kafka kafka-topics --create --topic logs --bootstrap-server localhost:9092
-    > docker-compose up pyspark-client
+    > docker-compose up -d pyspark-client
+

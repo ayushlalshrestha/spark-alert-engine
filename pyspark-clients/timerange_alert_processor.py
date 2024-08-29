@@ -9,6 +9,7 @@ from pyspark.sql.types import StructType, StructField, StringType, LongType
 
 THRESHOLD = 2
 WATERMARK_TIMERANGE = "10 minutes"
+SLIDE_DURATION = "1 minutes"
 
 # Create Spark session
 spark = SparkSession.builder.appName("KafkaSparkProcessor").getOrCreate()
@@ -42,9 +43,12 @@ df = df.withColumn("timestamp", to_timestamp(col("timestamp")))
 
 # Apply windowing and count
 windowed_counts = (
-    df.withWatermark("timestamp", WATERMARK_TIMERANGE)
+    df
+    .withWatermark("timestamp", WATERMARK_TIMERANGE)
     .groupBy(
+        # window(col("timestamp"), WATERMARK_TIMERANGE, SLIDE_DURATION), col("username")
         window(col("timestamp").cast("timestamp"), WATERMARK_TIMERANGE), col("username")
+        # window(col("timestamp").cast("timestamp"), "10 minutes", "5 minutes")
     )
     .count()
 )
